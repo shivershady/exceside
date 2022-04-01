@@ -1,20 +1,19 @@
 <template>
   <div>
-    <div class="output">
-      <div class="outputCalc">{{ calcValue || 0 }}</div>
-    </div>
-    <div class="buttons">
-      <div
-          class="button"
-          v-for="(btn,index) in btnArr"
-          :key="index"
-          :class="{ operator: ['C', '*', '/', '-', '+', '%', '='].includes(btn) }"
-      >
-        <div class="btn" @click="seclectBtn(btn)">
-          {{ btn }}
-        </div>
-      </div>
-    </div>
+   <div class="wrapper">
+     <div class="cart"><button>Giỏ hàng</button></div>
+     <div class="item" v-for="(article,index) in articles" :key="index">
+       <div class="img-box">
+         <img :src="article.thumb" alt="acticle">
+       </div>
+       <div class="content">
+         <div class="name">Name :{{ article.name }}</div>
+         <div class="price">Price: {{ article.price }}</div>
+         <div class="description">description :{{ article.description }}</div>
+       </div>
+       <button>ADD</button>
+     </div>
+   </div>
   </div>
 </template>
 
@@ -22,107 +21,60 @@
 export default {
   data() {
     return {
-      calcValue: "",
-      btnArr: ["C","*","/","-",7,8,9,"+",4,5,6,"%",1,2,3,"=",0,],
-      operator: null,
-      preCalcValue: "",
-      result:false,
-    };
-  },
-  methods:{
-    seclectBtn(btn){
-      if(!isNaN(btn)){
-        if(!this.result) {
-          this.calcValue += btn + "";
-        }else {
-          this.calcValue = btn;
-          this.result = false;
-        }
-      }
-      if(btn=="C"){
-        this.calcValue = "";
-      }
-      if(btn=="+"||btn=="-"||btn=="*"||btn=="/"){
-        this.preCalcValue = this.calcValue;
-        this.calcValue = "";
-        this.operator = btn;
-      }
-      if(btn=="="){
-        this.calcValue = eval(this.preCalcValue + this. operator + this.calcValue);
-        this.preCalcValue = "";
-        this.operator = null;
-        this.result = true;
-      }
+      articles: [],
+      valueInput: "",
+      url: `https://6246a3c3e3450d61b000fdf0.mockapi.io/products`,
+      options: {method: 'GET'},
     }
+  },
+  methods: {
+    send() {
+      fetch(this.url, this.options).then((resolve) => {
+        return resolve.json();
+      }).then((data) => {
+        this.articles = data;
+      }).catch((err) => console.log(err));
+    }
+  },
+  mounted() {
+    this.send();
   }
 }
 </script>
 
 <style scoped>
-.output {
-  text-align: right;
-  background-color: antiquewhite;
-  width: min(300px, 70%);
-  margin: 10px auto;
-  padding: 10px;
-  border: 0.5px solid rgb(255, 198, 124);
-  border-radius: 4px;
-  box-shadow: 2.8px 2.8px 2.2px rgba(0, 0, 0, 0.008),
-  6.7px 6.7px 5.3px rgba(0, 0, 0, 0.012),
-  12.5px 12.5px 10px rgba(0, 0, 0, 0.015),
-  22.3px 22.3px 17.9px rgba(0, 0, 0, 0.018),
-  41.8px 41.8px 33.4px rgba(0, 0, 0, 0.022),
-  100px 100px 80px rgba(0, 0, 0, 0.03);
+* {
+  box-sizing: border-box;
 }
-.outputCalc {
-  background-color: rgb(255, 209, 148);
-  padding: 15px;
-  border-radius: 3px;
+
+.wrapper{
+  margin: 3rem;
 }
-.buttons {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  grid-auto-rows: minmax(50px, auto);
-  width: min(300px, 70%);
-  border: 0.2px solid rgb(255, 198, 124);
-  border-radius: 4px;
+
+.cart{
+  width: 100%;
+  text-align: end;
+}
+
+.item {
+  display: flex;
+  justify-content: space-between;
   align-items: center;
-  background-color: antiquewhite;
-  justify-content: center;
-  margin: 10px auto;
-  gap: 5px;
-  box-shadow: 2.8px 2.8px 2.2px rgba(0, 0, 0, 0.008),
-  6.7px 6.7px 5.3px rgba(0, 0, 0, 0.012),
-  12.5px 12.5px 10px rgba(0, 0, 0, 0.015),
-  22.3px 22.3px 17.9px rgba(0, 0, 0, 0.018),
-  41.8px 41.8px 33.4px rgba(0, 0, 0, 0.022),
-  100px 100px 80px rgba(0, 0, 0, 0.03);
+  gap: 2rem;
 }
-.button {
-  background-color: rgb(255, 209, 148);
-  padding: 6px;
-  border-radius: 3px;
-  margin: 4px;
-  font-size: 1.5em;
-  font-weight: bold;
-  color: #000;
-  text-align: center;
-  cursor: pointer;
-  transition: all 0.2s ease-in-out;
+.item .img-box{
+  width: 500px;
+  height: 500px;
+  overflow: hidden;
+  margin: 1rem 0;
 }
-.button:hover {
-  background-color: rgb(238, 167, 75);
-  color: #000;
+
+.item .img-box img{
+  object-fit: cover;
+  width: 100%;
+  height: 100%;
 }
-.operator {
-  background-color: rgb(238, 167, 75);
-  color: #000;
-}
-.operator:hover {
-  background-color: rgb(255, 209, 148);
-}
-.MyId:hover {
-  cursor: pointer;
-  filter: brightness(130%);
+.item .content .title{
+  font-size: 36px;
 }
 </style>
