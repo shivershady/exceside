@@ -1,39 +1,20 @@
 <template>
-  <div class="app">
-    <!--    <div v-for="(product,index) in products" :key="index">-->
-    <!--      <div class="product">-->
-    <!--        <div class="product-name">Tên sản phẩm : {{product.name}}</div>-->
-    <!--        <div class="product-price">Giá sản phẩm : {{product.price}}</div>-->
-    <!--        <img :src="product.image" alt="product">-->
-    <!--      </div>-->
-    <!--    </div>-->
-
-
-    <!--    <div v-for="(product,index) in checkShowProduct" :key="index">-->
-    <!--      <div class="product">-->
-    <!--        <div class="product-name">Tên sản phẩm : {{ product.name }}</div>-->
-    <!--        <div class="product-price">Giá sản phẩm : {{ product.price }}</div>-->
-    <!--        <img :src="product.image" alt="product">-->
-    <!--      </div>-->
-    <!--    </div>-->
-    <!--  </div>-->
-
-        <div>
-          <div class="title">Sản phẩm đắt nhất</div>
-          <div class="product">
-            <div class="product-name">Tên sản phẩm : {{maxPrice[0].name}}</div>
-            <div class="product-price">Giá sản phẩm : {{maxPrice[0].price}}</div>
-            <img :src="maxPrice[0].image" alt="product">
-          </div>
+  <div>
+    <div class="output">
+      <div class="outputCalc">{{ calcValue || 0 }}</div>
+    </div>
+    <div class="buttons">
+      <div
+          class="button"
+          v-for="(btn,index) in btnArr"
+          :key="index"
+          :class="{ operator: ['C', '*', '/', '-', '+', '%', '='].includes(btn) }"
+      >
+        <div class="btn" @click="seclectBtn(btn)">
+          {{ btn }}
         </div>
-        <div>
-          <div class="title">Sản phẩm rẻ nhất</div>
-          <div class="product">
-            <div class="product-name">Tên sản phẩm : {{minPrice[0].name}}</div>
-            <div class="product-price">Giá sản phẩm : {{minPrice[0].price}}</div>
-            <img :src="minPrice[0].image" alt="product">
-          </div>
-        </div>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -41,117 +22,107 @@
 export default {
   data() {
     return {
-      cart: [],
-
-      products: [
-        {
-          id: 1,
-
-          name: "PS5",
-
-          price: 5555,
-
-          publicDate: "05-05-2021",
-
-          image:
-              "https://cdn.vjshop.vn/hightech/may-choi-game/ps5/sony-ps-5-1.jpg",
-
-          hot: true,
-        },
-
-        {
-          id: 2,
-
-          name: "PS4",
-
-          price: 4444,
-
-          publicDate: "04-04-2021",
-
-          image:
-              "https://gmedia.playstation.com/is/image/SIEPDC/ps4-slim-image-block-01-en-24jul20?$native--t$",
-
-          hot: true,
-        },
-
-        {
-          id: 3,
-
-          name: "PS3",
-
-          price: 3333,
-
-          publicDate: "03-03-2021",
-
-          image:
-              "https://game.haloshop.vn/image/catalog/blogs/ps3-co-con-dang-mua/ps3-co-con-dang-mua-21.jpg",
-
-          hot: false,
-        },
-      ],
-
-      paymentMethods: [
-        {text: "COD", value: 1},
-
-        {text: "Banking", value: 2},
-
-        {text: "Ứng dụng bên thứ 3", value: 3},
-      ],
-
-      selectedPayment: 2,
+      calcValue: "",
+      btnArr: ["C","*","/","-",7,8,9,"+",4,5,6,"%",1,2,3,"=",0,],
+      operator: null,
+      preCalcValue: "",
+      result:false,
     };
   },
-  computed: {
-    checkShowProduct() {
-      return this.products.filter((product) => {
-        if (product.hot) {
-          return product;
+  methods:{
+    seclectBtn(btn){
+      if(!isNaN(btn)){
+        if(!this.result) {
+          this.calcValue += btn + "";
+        }else {
+          this.calcValue = btn;
+          this.result = false;
         }
-      });
-    },
-    maxPrice() {
-      return this.products.filter((product) => {
-        return Math.max(product.price);
-      })
-    },
-    minPrice() {
-      return this.products.filter((product) => {
-        return Math.min(product.price);
-      })
-    },
-
+      }
+      if(btn=="C"){
+        this.calcValue = "";
+      }
+      if(btn=="+"||btn=="-"||btn=="*"||btn=="/"){
+        this.preCalcValue = this.calcValue;
+        this.calcValue = "";
+        this.operator = btn;
+      }
+      if(btn=="="){
+        this.calcValue = eval(this.preCalcValue + this. operator + this.calcValue);
+        this.preCalcValue = "";
+        this.operator = null;
+        this.result = true;
+      }
+    }
   }
-};
+}
 </script>
 
-<style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
+<style scoped>
+.output {
+  text-align: right;
+  background-color: antiquewhite;
+  width: min(300px, 70%);
+  margin: 10px auto;
+  padding: 10px;
+  border: 0.5px solid rgb(255, 198, 124);
+  border-radius: 4px;
+  box-shadow: 2.8px 2.8px 2.2px rgba(0, 0, 0, 0.008),
+  6.7px 6.7px 5.3px rgba(0, 0, 0, 0.012),
+  12.5px 12.5px 10px rgba(0, 0, 0, 0.015),
+  22.3px 22.3px 17.9px rgba(0, 0, 0, 0.018),
+  41.8px 41.8px 33.4px rgba(0, 0, 0, 0.022),
+  100px 100px 80px rgba(0, 0, 0, 0.03);
 }
-
-.hidden {
-  display: none !important;
+.outputCalc {
+  background-color: rgb(255, 209, 148);
+  padding: 15px;
+  border-radius: 3px;
 }
-
-.modal {
-  background: rgb(14, 14, 14, 0.3);
-  display: flex;
-  justify-content: center;
+.buttons {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  grid-auto-rows: minmax(50px, auto);
+  width: min(300px, 70%);
+  border: 0.2px solid rgb(255, 198, 124);
+  border-radius: 4px;
   align-items: center;
-  position: fixed;
-  top: 0;
-  left: 0;
-  bottom: 0;
-  right: 0;
+  background-color: antiquewhite;
+  justify-content: center;
+  margin: 10px auto;
+  gap: 5px;
+  box-shadow: 2.8px 2.8px 2.2px rgba(0, 0, 0, 0.008),
+  6.7px 6.7px 5.3px rgba(0, 0, 0, 0.012),
+  12.5px 12.5px 10px rgba(0, 0, 0, 0.015),
+  22.3px 22.3px 17.9px rgba(0, 0, 0, 0.018),
+  41.8px 41.8px 33.4px rgba(0, 0, 0, 0.022),
+  100px 100px 80px rgba(0, 0, 0, 0.03);
 }
-
-.modal img {
-  width: 400px;
-  height: 400px;
+.button {
+  background-color: rgb(255, 209, 148);
+  padding: 6px;
+  border-radius: 3px;
+  margin: 4px;
+  font-size: 1.5em;
+  font-weight: bold;
+  color: #000;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+}
+.button:hover {
+  background-color: rgb(238, 167, 75);
+  color: #000;
+}
+.operator {
+  background-color: rgb(238, 167, 75);
+  color: #000;
+}
+.operator:hover {
+  background-color: rgb(255, 209, 148);
+}
+.MyId:hover {
+  cursor: pointer;
+  filter: brightness(130%);
 }
 </style>
