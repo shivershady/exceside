@@ -1,68 +1,127 @@
 <template>
   <div class="app">
-    <h1 style="text-align:center">Product Card</h1>
-
-    <div class="product" v-for="(product,index) in products" :key="index">
-      <div class="product">
-        <img :src="product.image" alt="Denim Jeans">
-        <div class="id">id: {{ product.id }}</div>
-        <div class="name">name: {{ product.name }}</div>
-        <p class="price">giá: {{ product.price|formatMoney }}</p>
-        <p class="relaese-date" >ngày phát hành: {{product.releaseDate|formatDate}}</p>
-        <p class="selling">bán chạy hay không: {{ product.selling }}</p> <span v-show="product.selling=='Bán chạy'">Badge</span>
-        <div class="brand">Nhà phát hành: {{ product.brand }}</div>
-        <p class="description">Mô tả : {{ product.description }}</p>
-        <div class="color">
-          Màu sắc:
-          <div v-for="(item,index) in product.color" :key="index">
-            {{ item }}
-          </div>
+    <form class="addNote">
+      <label for="title">Tiêu đề</label>
+      <input type="text" id="title" v-model="title">
+      <label for="content">Nội dung</label>
+      <input type="text" id="content" v-model="content">
+      <button @click="addNote()">Thêm note</button>
+    </form>
+    <div class="list-note" v-for="(noteItem,noteIndex) in listNote" :key="noteIndex">
+      <div class="note-item">
+        <div class="title">Tiêu đề : {{ noteItem.title }}</div>
+        <div class="content">Nội dung : {{ noteItem.content }}</div>
+        <div class="input-box">
+          Tiêu đề :<input type="text" v-model="title">
+          Nội dung: <input type="text" v-model="content">
         </div>
-        <p>
-          <button @click="addProduct(product)" :disabled="product.color.length==0">Add to Cart</button>
-        </p>
+        <div class="btn">
+          <button class="update" @click="updateNote(noteItem.id,title,content)">Sửa</button>
+          <button class="delete" @click="deleteNote(noteItem.id)">Xoa</button>
+        </div>
       </div>
     </div>
-    {{cart}}
+    <div class="search">
+      <input type="number" v-model="idSearch">
+      <button @click="findByIdNote(idSearch)">Search</button>
+      <div class="title-by-id">Tiêu đề: {{titleFindById}}</div>
+      <div class="content-by-id">Nội dung: {{contentFindById}}</div>
+    </div>
   </div>
 </template>
 
 <script>
+import VModal from 'vue-js-modal';
+
 export default {
   data() {
     return {
-      cart:[],
-      products: [
-        {
-          id: 1,
-          name: "quần áo",
-          price: "100000",
-          releaseDate: "20-2-2031",
-          selling: "Bán chạy",
-          brand: "guchi",
-          description: "quần áo phù hợp cho mọi lứa tuổi",
-          image: require("./assets/ban-quan-ao-tre-em-online.jpg"),
-          color: ["red", "green", "yellow", "violet"],
-        },
-        {
-          id: 2,
-          name: "quần áo",
-          price: "100000",
-          releaseDate: "20-2-2031",
-          selling: "Bán không chạy",
-          brand: "guchi",
-          description: "quần áo phù hợp cho mọi lứa tuổi",
-          image: require("./assets/ban-quan-ao-tre-em-online.jpg"),
-          color: [],
-        },
-      ],
+      listNote: [],
+      title: '',
+      content: '',
+      show: true,
+      idSearch: 1,
+      titleFindById: '',
+      contentFindById: ''
     }
   },
-  methods:{
-    addProduct(product){
-      const cartLenght = this.cart.length;
+  methods: {
+    getListNoteApi() {
+      fetch('http://192.168.1.38/note_cy/hieu/listNote.php', {
+            method: 'GET',
+          }
+      )
+          .then(response => response.json())
+          .then(data => {
+            this.listNote = [...data];
+          })
+          .catch(error => console.log(error))
+    },
 
+    addNote() {
+      const formData = new FormData();
+      formData.append("title", this.title);
+      formData.append("content", this.content);
+      fetch('http://192.168.1.38/note_cy/hieu/addNote.php', {
+            method: 'POST',
+            body: formData,
+          }
+      )
+          .then(() => {
+                alert('Thêm thành công');
+                this.getListNoteApi();
+              }
+          )
+          .catch(error => console.log(error))
+    },
+    deleteNote(noteId) {
+      const formData = new FormData();
+      formData.append("id", noteId);
+      fetch('http://192.168.1.38/note_cy/hieu/deleteNote.php', {
+            method: 'POST',
+            body: formData,
+          }
+      )
+          .then(() => {
+                alert('Xoá thành công');
+                this.getListNoteApi();
+              }
+          )
+          .catch(error => console.log(error))
+    },
+    updateNote(noteId, titleNote, contentNote) {
+      const formData = new FormData();
+      formData.append("id", noteId);
+      formData.append("title", titleNote);
+      formData.append("content", contentNote);
+      fetch('http://192.168.1.38/note_cy/hieu/updateNote.php', {
+            method: 'POST',
+            body: formData,
+          }
+      )
+          .then(() => {
+                alert('sửa thành công');
+                this.getListNoteApi();
+              }
+          )
+          .catch(error => console.log(error))
+    },
+    findByIdNote(idNote) {
+      fetch(`http://192.168.1.38/note_cy/hieu/findById.php?id=${idNote}`, {
+            method: 'Get',
+          }
+      )
+          .then(response => response.json())
+          .then((data) => {
+            this.titleFindById = data.title;
+            this.contentFindById = data.content;
+          })
+          .catch(error => console.log(error))
     }
+  },
+
+  mounted() {
+    this.getListNoteApi();
   }
 }
 </script>
