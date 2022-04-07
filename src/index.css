@@ -2,7 +2,18 @@
     box-sizing: border-box;
 }
 html{
-    font-size: 16px;
+    font-size: 24px;
+}
+body{
+    background: #afa3a3;
+}
+
+.hover-trigger .hover-target {
+    display: none;
+}
+
+.hover-trigger:hover .hover-target {
+    display: block;
 }
 
 .hover-trigger .hover-target {
