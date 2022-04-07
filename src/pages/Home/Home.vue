@@ -2,7 +2,7 @@
   <div class="container px-4 md:px-0 max-w-6xl mx-auto relative z-10">
 
     <div class="mx-0 sm:mx-6">
-      <div class="bg-gray-200 w-full text-xl md:text-2xl text-gray-800 leading-normal rounded-t p-8">
+      <div class="bg-gray-200 w-full text-xl md:text-2xl text-gray-800 leading-normal rounded-2xl p-8">
 
        <Banner></Banner>
 
@@ -17,7 +17,7 @@
                    :key="productViewIndex">
                 <div class="flex-1 bg-white rounded-t rounded-b-none overflow-hidden shadow-lg">
                   <a href="#" class="flex flex-wrap no-underline hover:no-underline">
-                    <img :src="productViewItem.image.full_image_path" class="h-full w-full rounded-t pb-6">
+                    <img :src="productViewItem.image.full_image_path" class="h-72 w-full rounded-t pb-6">
                     <div class="w-full font-bold text-xl text-gray-900 px-6">{{ productViewItem.name }}</div>
                   </a>
                 </div>
@@ -50,7 +50,7 @@
                    :key="productSoldIndex">
                 <div class="flex-1 bg-white rounded-t rounded-b-none overflow-hidden shadow-lg">
                   <a href="#" class="flex flex-wrap no-underline hover:no-underline">
-                    <img :src="productSoldItem.image.full_image_path" class="h-full w-full rounded-t pb-6">
+                    <img :src="productSoldItem.image.full_image_path" class="h-72 w-full rounded-t pb-6">
                     <div class="w-full font-bold text-xl text-gray-900 px-6">{{ productSoldItem.name }}</div>
                   </a>
                 </div>
@@ -83,7 +83,7 @@
                    :key="productIndex">
                 <div class="flex-1 bg-white rounded-t rounded-b-none overflow-hidden shadow-lg">
                   <a href="#" class="flex flex-wrap no-underline hover:no-underline">
-                    <img :src="productItem.image.full_image_path" class="h-full w-full rounded-t pb-6">
+                    <img :src="productItem.image.full_image_path" class="h-72 w-full rounded-t pb-6">
                     <div class="w-full font-bold text-xl text-gray-900 px-6">{{ productItem.name }}</div>
                   </a>
                 </div>
