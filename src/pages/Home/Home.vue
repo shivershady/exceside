@@ -117,6 +117,7 @@
 <script>
 import {homeService} from "@/services/homeService";
 import Banner from "@/components/Banner";
+import {handleProduct} from "@/constants/handleProduct";
 
 export default {
   name: "Home",
@@ -132,31 +133,10 @@ export default {
   },
   methods:{
     addToCart(productItem){
-      const _addToCart =(cart,productItem)=>{
-        cart.push({
-          productItem,
-          quantity: 1,
-        })
-      };
-      let cart = localStorage.getItem('cart');
-      if(!cart){
-        cart = [];
-        _addToCart(cart,productItem);
-      }else {
-        cart = JSON.parse(cart);
-        const findIndex = cart.findIndex(item => item?.productItem.id == productItem.id);
-        if (findIndex > -1 ){
-          cart.find(item => item.productItem.id == productItem.id).quantity++
-        }else {
-          _addToCart(cart, productItem);
-        }
-      }
-      localStorage.setItem('cart', JSON.stringify(cart));
-      this.cart = cart;
+      this.cart = handleProduct.increaseProduct(productItem);
     }
   },
   async mounted() {
-
     try {
       const resp = await homeService.getHome();
       this.lastProducts = resp.data.lastProducts;
