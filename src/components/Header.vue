@@ -17,12 +17,22 @@
         <div class="flex w-1/2 pl-4 text-sm">
           <ul class="list-reset flex justify-between flex-1 md:flex-none items-center">
             <li class="mr-2">
-              <a class="inline-block py-2 px-2 text-gray-800 no-underline hover:text-blue-500 hover:underline"
-                 href="">POST</a>
+              <router-link :to="{name:'home'}"
+                           class="inline-block py-2 px-2 text-gray-800 no-underline hover:text-blue-500 hover:underline"
+                           href="">Trang chủ
+              </router-link>
             </li>
             <li class="mr-2">
-              <a class="inline-block text-gray-800 no-underline hover:text-blue-500 hover:underline py-2 px-2"
-                 href="#">LINK</a>
+              <div
+                  class="inline-block text-gray-800 no-underline   py-2 px-2 relative"
+                  @mouseenter="isDropDown=!isDropDown" @mouseleave="isDropDown=!isDropDown"
+              >Danh mục
+                <div class="bg-white absolute top-7 z-10000" v-show="isDropDown">
+                  <div class="px-4 py-2" v-for="( cateItem,cateIndex ) in category" :key="cateIndex">
+                    <router-link :to="{name:'categories', params:{id:cateItem.id}}">{{ cateItem.name }}</router-link>
+                  </div>
+                </div>
+              </div>
             </li>
             <li class="mr-2">
               <a class="inline-block text-gray-800 no-underline hover:text-blue-500 hover:underline py-2 px-2"
@@ -57,15 +67,27 @@
 </template>
 
 <script>
+import {categoriesService} from "@/services/categoriesService";
+
 export default {
   name: `Header`,
   props: ['imgCover'],
   data() {
     return {
+      isDropDown: false,
+      category: [],
 
     }
   },
-
+  methods: {},
+  async mounted() {
+    try {
+      const resp = await categoriesService.getCategory();
+      this.category = resp.data.data;
+    } catch (e) {
+      console.log(e)
+    }
+  }
 }
 </script>
 

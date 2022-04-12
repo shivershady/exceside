@@ -65,7 +65,7 @@
             <p class="text-2xl leading-normal text-gray-800">Total</p>
             <p class="text-2xl font-bold leading-normal text-right text-gray-800">{{ total }}</p>
           </div>
-          <router-link :to="{name:'order'}" type="button"
+          <router-link :to="{name:'make-order'}" type="button"
                   class="text-center text-base leading-none w-full py-5 bg-gray-800 border-gray-800 border focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-800 text-white">
             Thanh toán
           </router-link>

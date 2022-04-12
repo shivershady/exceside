@@ -11,14 +11,24 @@ export const router = new VueRouter({
             component: () => import('@/pages/Home/Home.vue'),
         },
         {
+            path: '/categories/:id',
+            name: 'categories',
+            component: () => import('@/pages/Category/Category.vue')
+        },
+        {
             path: '/cart',
             name: 'cart',
             component: () => import('@/pages/Cart/Cart.vue')
         },
         {
-            path: '/order',
-            name: 'order',
-            component: () => import('@/pages/Order/Order.vue')
+            path: '/make-order',
+            name: 'make-order',
+            component: () => import('@/pages/Order/MakeOrder.vue')
+        },
+        {
+            path: '/order-success',
+            name: 'order-success',
+            component: () => import('@/pages/Order/OrderSuccess.vue')
         },
         {
             path: '/signup',
@@ -29,6 +39,11 @@ export const router = new VueRouter({
             path: '/login',
             name: 'login',
             component: () => import('@/pages/Login/Login.vue')
+        },
+        {
+            path: '/profile',
+            name: 'profile',
+            component: () => import('@/pages/Profile/Profile.vue')
         },
         {
             path: '*',

@@ -12,8 +12,13 @@ export function getUser() {
     return Axios.get("user");
 }
 
+export function editProfile(payload) {
+    return Axios.put("update-profile",payload);
+}
+
 export const accountService = {
     signUp,
     login,
-    getUser
+    getUser,
+    editProfile
 };
